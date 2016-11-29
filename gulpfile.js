@@ -6,12 +6,14 @@ const babel = require('gulp-babel');
 const eslint = require('gulp-eslint');
 const browserSync = require('browser-sync').create();
 const reload = browserSync.reload; 
+const exec = require('child_process').exec;  
 
-// Where are files live 
+
+// Where our files live 
 const src = {
-    scss: 'app/scss/*.scss',
-    js:   'app/js/*.js',
-    html: 'dist/*.html'
+    scss: 'src/scss/*.scss',
+    js:   'src/js/*.js',
+    html: 'build/*.html'
 };
 
 // Tasks in array executed sequentially as in array. 
@@ -19,26 +21,24 @@ gulp.task('default', ['scripts', 'sass', 'sass:watch']);
 
 // Converts ES6->ES5 then concatenates files. 
 gulp.task('scripts', () => {
-    return gulp.src('./app/js/*.js')
-        .pipe(babel({
-            presets: ['es2015']
-        }))
-        .pipe(concat('main.js'))
-        .pipe(gulp.dest('./dist/'));
+    return gulp.src('./src/js/*.js')
+        .pipe(babel())
+        //.pipe(concat('main.js'))
+        .pipe(gulp.dest('./build/'));
 });
 
 gulp.task('sass', () => {
-      return gulp.src('./app/scss/*.scss')
+      return gulp.src('./src/scss/*.scss')
           .pipe(sass().on('error', sass.logError))
-          .pipe(gulp.dest('./dist'));
+          .pipe(gulp.dest('./build'));
 });
  
 gulp.task('sass:watch', () => {
-      gulp.watch('./app/scss/*.scss', ['sass']);
+      gulp.watch('./src/scss/*.scss', ['sass']);
 });
 
 gulp.task('lint', () => {
-    return gulp.src(['./app/js/*.js','!node_modules/**']) 
+    return gulp.src(['./src/js/*.js','!node_modules/**']) 
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
@@ -49,11 +49,11 @@ gulp.task('default', ['lint'], function () {
     console.log("success baybay");
 });
 
-// Serves up app on localhost; browser auto-refreshes after file changes.         
+// Serves up src on localhost; browser auto-refreshes after file changes.         
 gulp.task('serve', function () {
     browserSync.init({
         server: {
-            baseDir: "./dist/"
+            baseDir: "./build/"
         },
     });
 
@@ -63,4 +63,19 @@ gulp.task('serve', function () {
     gulp.watch(src.js, ['scripts', reload]);
 
 });
+
+// Automate unit testing on JavaScript with Tape. 
+gulp.task('tests', () => {
+    return exec('tape test/* | ./node_modules/.bin/faucet', function (err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+    });
+});
+
+// can have it run the linter, babel, test, then browserify ? 
+
+gulp.task('autotest', ['tests'], () => { 
+    gulp.watch(['build/*.js', 'test/*.js'], ['tests']); 
+});
+
 

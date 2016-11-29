@@ -1,5 +1,5 @@
 const test = require('tape').test; 
-const myFunc = require('./myFunc.js');
+const myFunc = require('../dist/myFunc.js');
 // think I need to export myFunc.js as a module, then import 
 // multiply3 as a method of that. 
 
