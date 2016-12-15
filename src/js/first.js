@@ -1,2 +1,3 @@
+const times3 = (a) => a * 3; 
 
-document.getElementById("test1").style.color = 'blue'; 
+export default times3; 

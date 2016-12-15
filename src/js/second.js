@@ -1,5 +1,5 @@
 const second = () => {
-    console.log("Second file!"); 
-}
+    console.log('Second file!'); 
+}; 
 
-second();
+export default second; 
