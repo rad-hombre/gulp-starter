@@ -7,28 +7,32 @@ const eslint = require('gulp-eslint');
 const browserSync = require('browser-sync').create();
 const reload = browserSync.reload; 
 const exec = require('child_process').exec;  
+const browserify = require('browserify');
+const fs = require('fs');
+const babelify = require('babelify');
+//const watchify = require('watchify');
 
 
 // Where our files live 
 const src = {
-    scss: 'src/scss/*.scss',
-    js:   'src/js/*.js',
-    html: 'build/*.html'
+    scss: './src/scss/*.scss',
+    js:   './src/js/*.js',
+    html: './build/*.html'
 };
 
 // Tasks in array executed sequentially as in array. 
-gulp.task('default', ['scripts', 'sass', 'sass:watch']);
+gulp.task('default', ['scripts', 'browserify', 'lint', 'lint:watch', 'sass', 'sass:watch']);
 
-// Converts ES6->ES5 then concatenates files. 
+// Converts ES6->ES5, THEN concatenates files into one js file. 
 gulp.task('scripts', () => {
-    return gulp.src('./src/js/*.js')
-        .pipe(babel())
-        //.pipe(concat('main.js'))
+    return gulp.src( src.js )
+        //.pipe(babel())  
+        .pipe(concat('main.js'))
         .pipe(gulp.dest('./build/'));
 });
 
 gulp.task('sass', () => {
-      return gulp.src('./src/scss/*.scss')
+      return gulp.src( src.scss )
           .pipe(sass().on('error', sass.logError))
           .pipe(gulp.dest('./build'));
 });
@@ -37,16 +41,16 @@ gulp.task('sass:watch', () => {
       gulp.watch('./src/scss/*.scss', ['sass']);
 });
 
+// Watches source JS for changes; linter alerts if bad change
 gulp.task('lint', () => {
-    return gulp.src(['./src/js/*.js','!node_modules/**']) 
+    return gulp.src([ src.js,'!node_modules/**']) 
         .pipe(eslint())
         .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
+        //.pipe(eslint.failAfterError());
 });
 
-gulp.task('default', ['lint'], function () {
-    // This will only run if the lint task is successful... 
-    console.log("success baybay");
+gulp.task('lint:watch', ['lint'], () => { 
+    gulp.watch([ src.js ], ['lint']); 
 });
 
 // Serves up src on localhost; browser auto-refreshes after file changes.         
@@ -73,9 +77,27 @@ gulp.task('tests', () => {
 });
 
 // can have it run the linter, babel, test, then browserify ? 
-
-gulp.task('autotest', ['tests'], () => { 
+gulp.task('tests:watch', ['tests'], () => { 
     gulp.watch(['build/*.js', 'test/*.js'], ['tests']); 
 });
+
+
+// [ ------------------------------------------ ] 
+//gulp.task('bb', ['lint', 'tests'], () => { 
+gulp.task('browserify', () => { 
+    //gulp.watch(['build/*.js', 'test/*.js'], ['tests']); 
+    //return 
+        browserify('./build/main.js')
+        .transform('babelify', {presets: ["es2015"]}) 
+        .bundle()
+        .pipe(fs.createWriteStream("./build/bundle.js"));
+
+});
+
+
+//const wb = watchify(browserify());
+//wb.transform(babelify.configure({
+    //experimental: true, 
+//}); 
 
 

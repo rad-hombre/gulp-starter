@@ -4,12 +4,14 @@
   "description": "A bare-bones gulp development setup for starting projects. ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1", 
+    "cc": "if [ `ls | wc -l` -gt '1' ] ; then rm ./build/[^i]* ; fi "
   },
   "author": "Matthew Orndoff",
   "license": "ISC",
   "devDependencies": {
     "babel-preset-es2015": "^6.18.0",
+    "babelify": "^7.3.0",
     "browser-sync": "^2.18.2",
     "browserify": "^13.1.1",
     "eslint-config-google": "^0.7.0",
@@ -23,6 +25,7 @@
     "gulp-shell": "^0.5.2",
     "tap-spec": "^4.1.1",
     "tap-summary": "^3.0.1",
-    "tape": "^4.6.3"
+    "tape": "^4.6.3",
+    "watchify": "^3.7.0"
   }
 }
