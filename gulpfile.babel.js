@@ -1,18 +1,22 @@
 
-const gulp = require('gulp');
-const sass = require('gulp-sass');
-const concat = require('gulp-concat');
-const babel = require('gulp-babel');
-const eslint = require('gulp-eslint');
-const browserSync = require('browser-sync').create();
-const reload = browserSync.reload; 
-const exec = require('child_process').exec;  
-const browserify = require('browserify');
-const fs = require('fs');
-const babelify = require('babelify');
-const del = require('del');  
+'use strict';
+
+import gulp from 'gulp';
+import sass from 'gulp-sass';
+import concat from 'gulp-concat';
+import babel from 'gulp-babel';
+import eslint from 'gulp-eslint';
+import browserSync from 'browser-sync'; 
+import exec from 'child_process'; 
+import browserify from 'browserify';
+import fs from 'fs';
+import babelify from 'babelify';
+import del from 'del';  
 //const watchify = require('watchify');
 
+
+const reload = browserSync.reload; 
+const execute = exec.exec; 
 
 // Where our files live 
 const src = {
@@ -71,7 +75,7 @@ gulp.task('serve', function () {
 
 // Automate unit testing on JavaScript with Tape. 
 gulp.task('tests', () => {
-    return exec('tape test/* | ./node_modules/.bin/faucet', function (err, stdout, stderr) {
+    return execute('tape test/* | ./node_modules/.bin/faucet', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
     });
