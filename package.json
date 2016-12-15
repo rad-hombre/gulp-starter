@@ -4,8 +4,7 @@
   "description": "A bare-bones gulp development setup for starting projects. ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1", 
-    "cc": "if [ `ls | wc -l` -gt '1' ] ; then rm ./build/[^i]* ; fi "
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Matthew Orndoff",
   "license": "ISC",
@@ -14,6 +13,7 @@
     "babelify": "^7.3.0",
     "browser-sync": "^2.18.2",
     "browserify": "^13.1.1",
+    "del": "^2.2.2",
     "eslint-config-google": "^0.7.0",
     "faucet": "0.0.1",
     "gulp": "^3.9.1",

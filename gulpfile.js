@@ -10,6 +10,7 @@ const exec = require('child_process').exec;
 const browserify = require('browserify');
 const fs = require('fs');
 const babelify = require('babelify');
+const del = require('del');  
 //const watchify = require('watchify');
 
 
@@ -100,4 +101,11 @@ gulp.task('browserify', () => {
     //experimental: true, 
 //}); 
 
+
+gulp.task('clean', () => {
+    return del(['build/*.js', 'build/*.css', '!build/index.html'])
+            .then(paths => {
+                console.log('Deleted files and folders:\n', paths.join('\n'));
+            });
+});
 
