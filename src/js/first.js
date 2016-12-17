@@ -1,3 +1,3 @@
-const times3 = (a) => a * 3; 
+const first = (a) => a * 3; 
 
-export default times3; 
+export {first}; 

@@ -28,12 +28,13 @@ const src = {
 // Tasks in array executed sequentially as in array. 
 gulp.task('default', ['scripts', 'browserify', 'lint', 'lint:watch', 'sass', 'sass:watch']);
 
-// Converts ES6->ES5, THEN concatenates files into one js file. 
+// Converts ES6->ES5, then throws transpiled js into temporary folder 
+// waiting to be bundled by Browserify  
+// TODO: Delete this. 
 gulp.task('scripts', () => {
     return gulp.src( src.js )
-        //.pipe(babel())  
-        .pipe(concat('main.js'))
-        .pipe(gulp.dest('./build/'));
+        .pipe(babel())  
+        .pipe(gulp.dest('./build/temp'));
 });
 
 gulp.task('sass', () => {
@@ -74,28 +75,28 @@ gulp.task('serve', function () {
 });
 
 // Automate unit testing on JavaScript with Tape. 
-gulp.task('tests', () => {
-    return execute('tape test/* | ./node_modules/.bin/faucet', function (err, stdout, stderr) {
+// TODO: Would be better to find way of doing this using streams without 'execute'
+// which feels like more of a hack. 
+gulp.task('test', () => {
+    return execute('babel-tape-runner ./test/*', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
     });
 });
 
 // can have it run the linter, babel, test, then browserify ? 
-gulp.task('tests:watch', ['tests'], () => { 
-    gulp.watch(['build/*.js', 'test/*.js'], ['tests']); 
+gulp.task('test:watch', ['test'], () => { 
+    gulp.watch(['src/*.js', 'test/*.js'], ['test']); 
 });
 
 
-// [ ------------------------------------------ ] 
-//gulp.task('bb', ['lint', 'tests'], () => { 
-gulp.task('browserify', () => { 
+// Uses browswerify to bundle up our ES5 code. 
+gulp.task('build', () => { 
     //gulp.watch(['build/*.js', 'test/*.js'], ['tests']); 
-    //return 
-        browserify('./build/main.js')
-        .transform('babelify', {presets: ["es2015"]}) 
+    return browserify( './src/js/main.js' )
+        .transform('babelify', {presets: ['es2015']}) 
         .bundle()
-        .pipe(fs.createWriteStream("./build/bundle.js"));
+        .pipe(fs.createWriteStream('./build/bundle.js'));
 
 });
 
@@ -108,8 +109,8 @@ gulp.task('browserify', () => {
 
 gulp.task('clean', () => {
     return del(['build/*.js', 'build/*.css', '!build/index.html'])
-            .then(paths => {
-                console.log('Deleted files and folders:\n', paths.join('\n'));
-            });
+        .then(paths => {
+            console.log('Deleted files and folders:\n', paths.join('\n'));
+        });
 });
 
