@@ -16,24 +16,6 @@ import watchify from 'watchify';
 const reload = browserSync.reload; 
 const execute = child_process.exec; 
 
-// TODO: Ok, need to separate building with and WITHOUT watchify. 
-// TODO: Yeah seriously, do that. Becausey you can't just include "plugin" section. Maybe 
-// append it later. 
-const b = browserify({
-            entries: './src/js/main.js',
-            cache: {}, 
-            packageCache: {}, 
-            plugin: [watchify]
-}); 
-
-// Function takes global defined browserify instance  
-const bundleMe = () => {
-    b.transform('babelify', {presets: ['es2015']})
-    .bundle()
-    .pipe(fs.createWriteStream('./build/bundle.js'));
-    console.log("We Build This City!");
-}; 
-
 // Where our files live 
 const src = {
     scss: './src/scss/*.scss',
@@ -47,13 +29,24 @@ gulp.task('default', ['build', 'lint', 'lint:watch', 'sass', 'sass:watch']);
 // Uses babelify and browswerify to transpile (ES6->ES5) 
 // and bundle up our ES5 code. 
 gulp.task('build', () => { 
-    bundleMe();
-});
 
-// Test for building with watchify. 
-gulp.task('build:watchify', () => { 
+    const b = browserify({
+                entries: './src/js/main.js',
+                cache: {}, 
+                packageCache: {}, 
+                plugin: [watchify]
+    }); 
+
+    // Function takes browserify instance defined in higher scope and initiates bundling 
+    const bundleMe = () => {
+        b.transform('babelify', {presets: ['es2015']})
+        .bundle()
+        .pipe(fs.createWriteStream('./build/bundle.js'));
+        console.log("We Build This City!");
+    }; 
+
     b.on('update', bundleMe); 
-    bundleMe(); 
+    bundleMe();
 });
 
 // Compile SCSS to CSS 
