@@ -1,10 +1,18 @@
 import tape from 'tape';
 const test = tape.test;
 
-import times3 from './../src/js/first.js'; 
+//import * as myFunc from './../src/js/first.js'; 
+import {first} from './../src/js/first.js'; 
 
-test('first', (assert) => { // Further code for tests goes here 
-    assert.equal(times3(5), 20, "Myfunc multiples by 3 "); 
+if(first){
+    console.log("They've been imported"); 
+    console.log(first);
+}
+
+
+test('My awesome function', (assert) => { 
+    // Further code for tests goes here 
+    assert.equal(first(5), 20, "should multiply by 3"); 
     // is that last message as a success? It's just used as a label for the test. 
     assert.end();
 });
