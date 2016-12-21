@@ -1,4 +1,4 @@
-# Gulp starter 
+# Gulp Starter 
 
 Just a slick "little" boilerplate to help start projects. 
 This thing actually has a lot more going on than I initially anticipated to add. 
@@ -24,7 +24,9 @@ npm run test | faucet
 
 
 #Troubleshooting
-* devDependencies from in package.json aren't installing for some reason? I had this issue as well. It seems running ```npm install --only=dev``` takes care of the issue by forcing NPM to install devDependencies.  
+**devDependencies from in package.json aren't installing for some reason?**
+
+ I had this issue as well. It seems running ```npm install --only=dev``` takes care of the issue by forcing NPM to install devDependencies.  
 
 
 ### TODO: 
