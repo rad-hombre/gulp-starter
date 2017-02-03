@@ -3,10 +3,7 @@
 Just a slick "little" boilerplate to help start projects. 
 This thing actually has a lot more going on than I initially anticipated to add. 
 
-To get started: 
-```
-npm install; npm install gulp 
-```
+To get started, clone the repo, run `$npm install -g gulp` then `$npm install` 
 
 # Testing 
 Testing uses [tape](https://github.com/substack/tape) which produces TAP output by default. For better testing output, installing something like [faucet](https://github.com/substack/faucet), [tap-spec](https://github.com/scottcorgan/tap-spec), or [tap-summary](https://github.com/zoubin/tap-summary) provides a better visual experience.   
@@ -32,4 +29,5 @@ npm run test | faucet
 ### TODO: 
 * Give overview of file structure. 
 * Give brief explanation of what's happening inside gulp, the tasks and the flow. 
+* Break down tasks a little more 
  
